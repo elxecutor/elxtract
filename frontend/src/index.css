@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: "Jetbrains";
-  src: url(../src/assets/JetBrainsMono-Regular.woff2);
+  src: url(/assets/JetBrainsMono-Regular.woff2);
 }
 @font-face{
   font-family: "Satoshi";
-  src: url(../src/assets/Satoshi-Variable.woff2);
+  src: url(/assets/Satoshi-Variable.woff2);
 }
 @theme{
   --accent:var(--color-red-600)

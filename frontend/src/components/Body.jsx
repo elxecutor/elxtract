@@ -13,7 +13,7 @@ export default function Body() {
             </section>
             <section className="p-8 py-16 flex flex-col md:flex-row gap-8 items-top">
 
-                <img src="../src/assets/undraw_download_sa8g.svg" alt="" className="h-60 w-full md:w-1/2" />
+                <img src="/assets/undraw_download_sa8g.svg" alt="" className="h-60 w-full md:w-1/2" />
                 <div className="flex flex-col p-4 gap-4 w-full md:w-1/2">
                     <h2 className="text-2xl">How to download YouTube videos?</h2>
                     <ol>
