@@ -288,9 +288,9 @@ function BodyComponent() {
                 <strong>Note:</strong> Downloaded files are automatically cleaned up to save space.
               </p>
             </ol>
-            <div className="mt-4 p-3 bg-blue-50 rounded">
-              <h3 className="font-semibold text-blue-800">Space Management</h3>
-              <p className="text-sm text-blue-700">
+            <div className="mt-4 p-3 bg-neutral-200 rounded border-red-400 border-1">
+              <h3 className="font-semibold">Space Management</h3>
+              <p className="text-sm">
                 Files are automatically deleted after 24 hours to conserve
                 server space.
               </p>
