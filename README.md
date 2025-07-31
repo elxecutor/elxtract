@@ -96,28 +96,6 @@ If using VS Code, you can use the predefined tasks:
 https://www.youtube.com/watch?v=dQw4w9WgXcQ
 https://youtu.be/jNQXAC9IVRw
 ```
-
-## 📁 Project Structure
-
-```
-elxtract/
-├── backend/                 # Django REST API
-│   ├── backend/            # Django project settings
-│   ├── core/               # Main app with video processing
-│   │   ├── models.py       # Database models
-│   │   ├── views.py        # API endpoints
-│   │   └── urls.py         # URL routing
-│   ├── media/downloads/    # Temporary download storage
-│   └── manage.py           # Django management script
-├── frontend/               # React application
-│   ├── src/
-│   │   ├── components/     # React components
-│   │   └── main.jsx        # Application entry point
-│   ├── public/            # Static assets
-│   └── package.json       # Frontend dependencies
-└── README.md              # This file
-```
-
 ## 🔧 API Endpoints
 
 | Method | Endpoint | Description |
@@ -203,14 +181,6 @@ The frontend is configured to work with the backend on `localhost:8000`. If you 
 ## ⚠️ Legal Notice
 
 This tool is for educational and personal use only. Please respect YouTube's Terms of Service and copyright laws. Users are responsible for ensuring they have the right to download content.
-
-## � Bug Reports
-
-Found a bug? Please create an issue with:
-- Steps to reproduce
-- Expected vs actual behavior
-- Browser and OS information
-- Error messages (if any)
 
 ## 📄 License
 
