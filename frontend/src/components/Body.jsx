@@ -18,6 +18,7 @@ function BodyComponent() {
 
         setLoading(true);
         setError("");
+        setDownloadUrl("")
         setFormats([]);
         setVideoDetails(null);
 
@@ -95,17 +96,17 @@ function BodyComponent() {
         <section className="min-h-[50vh] p-8 py-24 flex flex-col gap-8 items-center">
           <h1 className="text-3xl">YouTube Video Downloader</h1>
           <div className="w-full max-w-[600px] flex flex-col gap-4">
-            <div className="h-10 w-full flex items-center border-3 border-(--accent) rounded">
+            <div className="h-20 md:h-10 w-full flex flex-nowrap flex-col md:flex-row items-center border-3 border-(--accent) rounded">
               <input
                 type="text"
-                className="w-full bg-white h-full outline-none p-1"
+                className="w-full bg-white h-1/2 md:h-full outline-none p-1"
                 placeholder="Paste video link or id here"
                 value={videoUrl}
                 onChange={(e) => setVideoUrl(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && fetchFormats()}
               />
               <button
-                className={`bg-(--accent) text-white h-full cursor-pointer hover:contrast-125 disabled:opacity-50 transition-all duration-200 whitespace-nowrap px-4`}
+                className={`bg-(--accent) text-white h-1/2 md:h-full w-full md:w-fit cursor-pointer hover:contrast-125 disabled:opacity-50 transition-all duration-200 whitespace-nowrap px-4`}
                 onClick={fetchFormats}
                 disabled={loading}
               >
@@ -118,7 +119,7 @@ function BodyComponent() {
               </div>
             )}
             {downloadUrl && (
-              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex flex-col items-start flex-1 min-w-0">
                   <p className="font-semibold truncate">Download ready!</p>
                   {cleanupInfo && (
@@ -129,7 +130,7 @@ function BodyComponent() {
                 </div>
                 <button
                   type="button"
-                  className={`bg-(--accent) text-white px-4 py-2 rounded hover:contrast-125 disabled:opacity-50 cursor-pointer transition-all duration-200`}
+                  className={`bg-(--accent) w-full md:w-fit text-white px-4 py-2 rounded hover:contrast-125 disabled:opacity-50 cursor-pointer transition-all duration-200`}
                   onClick={async (e) => {
                     e.preventDefault();
                     try {
@@ -191,17 +192,17 @@ function BodyComponent() {
               <div className="w-full">
                 {videoDetails && (
                   <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-                    <div className="flex items-start gap-4">
+                    <div className="flex flex-col md:flex-row items-start gap-4">
                       {videoDetails.thumbnail && (
                         <img
                           src={videoDetails.thumbnail}
                           alt="Video thumbnail"
-                          className="w-32 h-24 object-cover rounded shadow flex-shrink-0"
+                          className="w-full md:w-32 h-24 object-cover rounded shadow flex-shrink-0"
                         />
                       )}
                       <div className="flex-1 min-w-0">
                         {videoDetails.title && (
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2 break-words">
+                          <h3 className="text-md text-lg font-semibold text-gray-900 mb-2 break-words">
                             {videoDetails.title}
                           </h3>
                         )}
@@ -261,6 +262,10 @@ function BodyComponent() {
             </a>
           </p>
         </section>
+
+
+
+
         <section className="p-8 py-16 flex flex-col md:flex-row gap-8 items-top">
           <img
             src="/assets/undraw_download_sa8g.svg"
@@ -288,9 +293,9 @@ function BodyComponent() {
                 <strong>Note:</strong> Downloaded files are automatically cleaned up to save space.
               </p>
             </ol>
-            <div className="mt-4 p-3 bg-blue-50 rounded">
-              <h3 className="font-semibold text-blue-800">Space Management</h3>
-              <p className="text-sm text-blue-700">
+            <div className="mt-4 p-3 bg-neutral-200 border border-(--accent) rounded">
+              <h3 className="font-semibold">Space Management</h3>
+              <p className="text-sm">
                 Files are automatically deleted after 24 hours to conserve
                 server space.
               </p>
