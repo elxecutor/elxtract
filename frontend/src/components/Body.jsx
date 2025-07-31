@@ -207,9 +207,11 @@ export default function Body() {
                             - {format.note}
                           </span>
                         )}
-                        <div className="text-sm text-gray-500">
-                          Size: {formatFileSize(format.filesize)}
-                        </div>
+                        {format.filesize && (
+                          <div className="text-sm text-gray-500">
+                            Size: {formatFileSize(format.filesize)}
+                          </div>
+                        )}
                       </div>
                       <button
                         onClick={() => downloadVideo(format.format_id)}
