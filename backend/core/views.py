@@ -1,6 +1,8 @@
 import os
 import hashlib
 import yt_dlp
+import threading
+import time
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -42,11 +44,28 @@ class AvailableFormatsView(APIView):
 def get_video_id(url):
     return hashlib.sha256(url.encode()).hexdigest()
 
+# Utility function to delete file after specified time
+def delete_file_after_delay(file_path, delay_hours):
+    """Delete a file after a specified delay in hours"""
+    def delayed_delete():
+        time.sleep(delay_hours * 3600)  # Convert hours to seconds
+        try:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                print(f"Auto-deleted file: {file_path}")
+        except Exception as e:
+            print(f"Error auto-deleting file {file_path}: {e}")
+    
+    thread = threading.Thread(target=delayed_delete)
+    thread.daemon = True
+    thread.start()
+
 # View to download MP4 using actual video title
 class DownloadMP4View(APIView):
     def post(self, request):
         url = request.data.get("url")
         format_id = request.data.get("format_id")
+
         if not url or not format_id:
             return Response({"error": "URL and format_id are required."}, status=400)
 
@@ -78,15 +97,110 @@ class DownloadMP4View(APIView):
                 video_id = get_video_id(f"{url}_{format_id}")
 
             # Store or update record
-            DownloadRequest.objects.get_or_create(
+            download_record, created = DownloadRequest.objects.get_or_create(
                 url=url,
                 format="mp4",
                 video_id=video_id,
-                filename=filename
+                defaults={'filename': filename}
             )
+            
+            file_path = os.path.join(output_dir, filename)
+            
+            # Set up automatic cleanup: always 24 hours
+            if settings.AUTO_CLEANUP_ENABLED:
+                delete_file_after_delay(file_path, settings.CLEANUP_DOWNLOADS_AFTER_HOURS)
 
         except Exception as e:
             return Response({"error": str(e)}, status=500)
 
         file_url = f"{request.scheme}://{request.get_host()}/media/downloads/{filename}"
-        return Response({"download_url": file_url})
+        
+        # Always inform user of 24-hour cleanup
+        cleanup_info = {
+            "message": f"File will be auto-deleted in {settings.CLEANUP_DOWNLOADS_AFTER_HOURS} hours"
+        }
+        return Response({
+            "download_url": file_url,
+            "filename": filename,
+            "cleanup_info": cleanup_info
+        })
+
+# View to manually trigger cleanup
+class CleanupView(APIView):
+    def post(self, request):
+        action = request.data.get("action", "old")  # 'old', 'all', 'orphaned'
+        days = request.data.get("days", 2)
+        
+        output_dir = os.path.join(settings.MEDIA_ROOT, "downloads")
+        if not os.path.exists(output_dir):
+            return Response({"message": "No downloads directory found"})
+        
+        count = 0
+        space_freed = 0
+        
+        try:
+            if action == "all":
+                # Delete all files and records
+                import glob
+                DownloadRequest.objects.all().delete()
+                pattern = os.path.join(output_dir, '*')
+                for file_path in glob.glob(pattern):
+                    if os.path.isfile(file_path):
+                        try:
+                            file_size = os.path.getsize(file_path)
+                            os.remove(file_path)
+                            space_freed += file_size
+                            count += 1
+                        except Exception:
+                            pass
+                            
+            elif action == "orphaned":
+                # Delete files without database records
+                import glob
+                db_filenames = set(DownloadRequest.objects.values_list('filename', flat=True))
+                pattern = os.path.join(output_dir, '*')
+                for file_path in glob.glob(pattern):
+                    if os.path.isfile(file_path):
+                        filename = os.path.basename(file_path)
+                        if filename not in db_filenames:
+                            try:
+                                file_size = os.path.getsize(file_path)
+                                os.remove(file_path)
+                                space_freed += file_size
+                                count += 1
+                            except Exception:
+                                pass
+                                
+            else:  # action == "old"
+                # Delete old files based on days
+                from datetime import timedelta
+                from django.utils import timezone
+                
+                cutoff = timezone.now() - timedelta(days=days)
+                old_downloads = DownloadRequest.objects.filter(created_at__lt=cutoff)
+                
+                for download in old_downloads:
+                    file_path = os.path.join(output_dir, download.filename)
+                    try:
+                        if os.path.exists(file_path):
+                            file_size = os.path.getsize(file_path)
+                            os.remove(file_path)
+                            space_freed += file_size
+                            count += 1
+                    except Exception:
+                        pass
+                    download.delete()
+            
+            space_mb = space_freed / (1024 * 1024)
+            return Response({
+                "success": True,
+                "files_deleted": count,
+                "space_freed_mb": round(space_mb, 2),
+                "action": action
+            })
+            
+        except Exception as e:
+            return Response({
+                "success": False,
+                "error": str(e)
+            }, status=500)

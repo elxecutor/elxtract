@@ -144,3 +144,8 @@ CORS_ALLOW_CREDENTIALS = True
 # For development only - in production, use specific origins
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
+
+# Download cleanup settings
+CLEANUP_DOWNLOADS_AFTER_HOURS = int(os.getenv('CLEANUP_DOWNLOADS_AFTER_HOURS', '24'))  # Delete after 24 hours by default
+AUTO_CLEANUP_ENABLED = os.getenv('AUTO_CLEANUP_ENABLED', 'True').lower() in ('true', '1', 'yes')
+IMMEDIATE_CLEANUP_AFTER_DOWNLOAD = os.getenv('IMMEDIATE_CLEANUP_AFTER_DOWNLOAD', 'False').lower() in ('true', '1', 'yes')
