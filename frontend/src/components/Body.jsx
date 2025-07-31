@@ -3,6 +3,7 @@ import { useState } from "react";
 function BodyComponent() {
     const [videoUrl, setVideoUrl] = useState("");
     const [formats, setFormats] = useState([]);
+    const [videoDetails, setVideoDetails] = useState(null);
     const [loading, setLoading] = useState(false);
     const [downloading, setDownloading] = useState(false);
     const [error, setError] = useState("");
@@ -18,6 +19,7 @@ function BodyComponent() {
         setLoading(true);
         setError("");
         setFormats([]);
+        setVideoDetails(null);
 
         try {
             const response = await fetch('/api/formats/', {
@@ -32,6 +34,7 @@ function BodyComponent() {
 
             if (response.ok) {
                 setFormats(data.formats);
+                setVideoDetails(data.video_details || null);
                 if (data.formats.length === 0) {
                     setError("No downloadable formats found for this video");
                 }
@@ -186,6 +189,31 @@ function BodyComponent() {
             )}
             {formats.length > 0 && (
               <div className="w-full">
+                {videoDetails && (
+                  <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+                    <div className="flex items-start gap-4">
+                      {videoDetails.thumbnail && (
+                        <img
+                          src={videoDetails.thumbnail}
+                          alt="Video thumbnail"
+                          className="w-32 h-24 object-cover rounded shadow flex-shrink-0"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        {videoDetails.title && (
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2 break-words">
+                            {videoDetails.title}
+                          </h3>
+                        )}
+                        {videoDetails.duration && (
+                          <p className="text-sm text-gray-600">
+                            Duration: {Math.floor(videoDetails.duration / 60)}:{String(videoDetails.duration % 60).padStart(2, '0')}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <h3 className="text-lg font-semibold mb-4">
                   Available Formats:
                 </h3>
@@ -256,7 +284,7 @@ function BodyComponent() {
                 options.
               </li>
               <li>5. Choose your preferred format and click "Download".</li>
-              <p className="text-sm text-gray-500 mt-2">
+              <p>
                 <strong>Note:</strong> Downloaded files are automatically cleaned up to save space.
               </p>
             </ol>

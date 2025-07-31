@@ -38,7 +38,13 @@ class AvailableFormatsView(APIView):
                     if f["ext"] == "mp4" and f.get("vcodec") != "none" and f.get("acodec") != "none"
                 ]
                 formats = sorted(formats, key=lambda x: x["resolution"] or 0)
-                return Response({"formats": formats})
+                # Add video details
+                video_details = {
+                    "title": info.get("title"),
+                    "duration": info.get("duration"),
+                    "thumbnail": info.get("thumbnail"),
+                }
+                return Response({"formats": formats, "video_details": video_details})
         except yt_dlp.utils.DownloadError as e:
             logger.error(f"yt_dlp DownloadError: {e}")
             return Response({"error": "Failed to fetch video info. The video may be unavailable or restricted."}, status=400)
