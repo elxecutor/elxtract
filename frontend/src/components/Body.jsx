@@ -4,7 +4,7 @@ export default function Body() {
     return(
         <main>
             <section className="min-h-[50vh] p-8 py-24 flex flex-col gap-8 items-center">
-                <h1 className="text-3xl">Youtube Video Downloder</h1>
+                <h1 className="text-3xl">Youtube Video Downloader</h1>
                 <div className="h-10 w-full max-w-[600px] flex items-center border-3 border-(--accent) rounded">
                     <input type="text" className="w-full bg-white h-full outline-none p-1" placeholder="Paste video link here" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} />
                     <button className="bg-(--accent) text-white px-4 h-full cursor-pointer hover:contrast-125">Download</button>
