@@ -216,8 +216,5 @@ Found a bug? Please create an issue with:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👥 Contributors
-
-- [elxecutor](https://github.com/elxecutor) - Project Owner
 
 
