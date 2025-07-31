@@ -1,0 +1,50 @@
+# Frontend build files and dependencies
+frontend/node_modules
+frontend/dist
+frontend/.vite
+frontend/.env
+
+# Python files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Django files
+backend/db.sqlite3
+backend/media/downloads/*
+!backend/media/downloads/.gitkeep
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

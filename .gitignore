@@ -227,3 +227,43 @@ sketch
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
+# YouTube Downloader specific files
+backend/media/downloads/
+*.mp4
+*.mp3
+*.webm
+*.mkv
+*.avi
+*.part
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Frontend build output
+frontend/dist/
+frontend/build/
+
+# Package lock files (if using yarn, uncomment the npm-lock line)
+# package-lock.json
+yarn.lock
+
+# VS Code workspace settings (keep tasks.json but ignore other workspace files)
+.vscode/settings.json
+.vscode/launch.json
+
+# Temporary files
+*.tmp
+*.temp
+
+# macOS specific (in case someone uses macOS)
+.DS_Store
+
+# Windows specific (in case someone uses Windows)
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
