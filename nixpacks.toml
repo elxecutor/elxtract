@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ['python39', 'nodejs-18_x', 'ffmpeg']
+
+[phases.install]
+cmds = ['cd backend && pip install -r requirements.txt']
+
+[phases.build]
+cmds = ['cd backend && python manage.py collectstatic --noinput']
+
+[start]
+cmd = 'cd backend && python manage.py migrate && gunicorn backend.wsgi:application'
