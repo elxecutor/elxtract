@@ -126,7 +126,7 @@ export default function Body() {
                 </div>
                 <button
                   type="button"
-                  className={`bg-(--accent) text-white px-4 py-2 rounded hover:contrast-125 disabled:opacity-50`}
+                  className={`bg-(--accent) text-white px-4 py-2 rounded hover:contrast-125 disabled:opacity-50 cursor-pointer transition-all duration-200`}
                   onClick={async (e) => {
                     e.preventDefault();
                     try {
@@ -214,7 +214,7 @@ export default function Body() {
                       <button
                         onClick={() => downloadVideo(format.format_id)}
                         disabled={downloading}
-                        className="bg-(--accent) text-white px-4 py-2 rounded hover:contrast-125 disabled:opacity-50"
+                        className="bg-(--accent) text-white px-4 py-2 rounded hover:contrast-125 disabled:opacity-50 cursor-pointer transition-all duration-200"
                       >
                         {downloading ? "Downloading..." : "Download"}
                       </button>
