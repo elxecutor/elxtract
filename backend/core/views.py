@@ -21,6 +21,8 @@ class AvailableFormatsView(APIView):
             'skip_download': True,
         }
 
+        import logging
+        logger = logging.getLogger(__name__)
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=False)
@@ -37,8 +39,12 @@ class AvailableFormatsView(APIView):
                 ]
                 formats = sorted(formats, key=lambda x: x["resolution"] or 0)
                 return Response({"formats": formats})
+        except yt_dlp.utils.DownloadError as e:
+            logger.error(f"yt_dlp DownloadError: {e}")
+            return Response({"error": "Failed to fetch video info. The video may be unavailable or restricted."}, status=400)
         except Exception as e:
-            return Response({"error": str(e)}, status=500)
+            logger.exception("Unexpected error in AvailableFormatsView")
+            return Response({"error": "Internal server error. Please try again later."}, status=500)
 
 # Utility to generate hash-based ID if needed
 def get_video_id(url):
@@ -47,15 +53,18 @@ def get_video_id(url):
 # Utility function to delete file after specified time
 def delete_file_after_delay(file_path, delay_hours):
     """Delete a file after a specified delay in hours"""
+    import logging
+    logger = logging.getLogger(__name__)
     def delayed_delete():
         time.sleep(delay_hours * 3600)  # Convert hours to seconds
         try:
             if os.path.exists(file_path):
                 os.remove(file_path)
-                print(f"Auto-deleted file: {file_path}")
+                logger.info(f"Auto-deleted file: {file_path}")
+        except FileNotFoundError:
+            logger.warning(f"File not found for auto-delete: {file_path}")
         except Exception as e:
-            print(f"Error auto-deleting file {file_path}: {e}")
-    
+            logger.error(f"Error auto-deleting file {file_path}: {e}")
     thread = threading.Thread(target=delayed_delete)
     thread.daemon = True
     thread.start()

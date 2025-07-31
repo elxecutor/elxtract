@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Body() {
+function BodyComponent() {
     const [videoUrl, setVideoUrl] = useState("");
     const [formats, setFormats] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -96,7 +96,7 @@ export default function Body() {
               <input
                 type="text"
                 className="w-full bg-white h-full outline-none p-1"
-                placeholder="Paste video link here"
+                placeholder="Paste video link or id here"
                 value={videoUrl}
                 onChange={(e) => setVideoUrl(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && fetchFormats()}
@@ -228,7 +228,7 @@ export default function Body() {
           </div>
           <p className="text-sm font-100">
             By using our service you are accepting our{" "}
-            <a href="" className="">
+            <a href="/terms" className="">
               Terms of Use
             </a>
           </p>
@@ -256,10 +256,9 @@ export default function Body() {
                 options.
               </li>
               <li>5. Choose your preferred format and click "Download".</li>
-              <li>
-                6. <strong>Note:</strong> Downloaded files are automatically
-                cleaned up to save space.
-              </li>
+              <p className="text-sm text-gray-500 mt-2">
+                <strong>Note:</strong> Downloaded files are automatically cleaned up to save space.
+              </p>
             </ol>
             <div className="mt-4 p-3 bg-blue-50 rounded">
               <h3 className="font-semibold text-blue-800">Space Management</h3>
@@ -271,5 +270,34 @@ export default function Body() {
           </div>
         </section>
       </main>
+    );
+}
+
+// Error Boundary for fallback UI
+import React from "react";
+class ErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+    static getDerivedStateFromError(error) {
+        return { hasError: true };
+    }
+    componentDidCatch(error, errorInfo) {
+        // Optionally log error info
+    }
+    render() {
+        if (this.state.hasError) {
+            return <div style={{color: 'red', padding: '1em'}}>Something went wrong. Please reload the page.</div>;
+        }
+        return this.props.children;
+    }
+}
+
+export default function Body(props) {
+    return (
+        <ErrorBoundary>
+            <BodyComponent {...props} />
+        </ErrorBoundary>
     );
 }
