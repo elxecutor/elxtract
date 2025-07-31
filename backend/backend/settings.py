@@ -171,7 +171,7 @@ CORS_ALLOWED_ORIGINS = [
 if not DEBUG:
     # Add your Railway domain here
     CORS_ALLOWED_ORIGINS.extend([
-        "https://your-app-name.up.railway.app",  # Replace with your Railway domain
+        "https://web-production-77715.up.railway.app/",  # Replace with your Railway domain
     ])
 
 CORS_ALLOW_CREDENTIALS = True
